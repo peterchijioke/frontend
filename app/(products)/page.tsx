@@ -5,7 +5,7 @@ export default function ProductsPage() {
   return (
     <div>
       <NavBar />
-      <main>
+      <main className=" lg:mx-0 md:mx-5 mx-5">
         <ProductList />
       </main>
     </div>
