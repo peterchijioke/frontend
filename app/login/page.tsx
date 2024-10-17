@@ -5,7 +5,10 @@ export default function LoginPage() {
   return (
     <div>
       <NavBar />
-      <main>
+      <main className=" pt-20">
+        <div className=" flex justify-center">
+          <span className=" text-xl font-semibold">Login</span>
+        </div>
         <LoginForm />
       </main>
     </div>
