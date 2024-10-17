@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { LoginSchema, loginSchema } from "@/app/_validation/loginValidation";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function LoginForm() {
   const form = useForm<LoginSchema>({
@@ -36,22 +37,23 @@ export default function LoginForm() {
     <Form {...form}>
       <form className="max-w-md mx-auto p-4" onSubmit={handleSubmit(onSubmit)}>
         <FormField
-          control={control}
-          name="username"
+          control={form.control}
+          name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel htmlFor="username">Username</FormLabel>
+              <FormLabel htmlFor="email">Email</FormLabel>
               <FormControl>
                 <Input
-                  id="username"
-                  type="text"
-                  {...register("username")}
-                  placeholder="Enter your username"
+                  id="email"
+                  type="email"
+                  {...register("email")}
+                  placeholder="Enter your email"
                 />
               </FormControl>
-              <FormDescription>Enter your username</FormDescription>
-              {errors.username && (
-                <FormMessage>{errors.username.message}</FormMessage>
+              {errors.email && (
+                <FormMessage className=" text-red-500">
+                  {errors.email.message}
+                </FormMessage>
               )}
             </FormItem>
           )}
@@ -73,16 +75,22 @@ export default function LoginForm() {
                   placeholder="Enter your password"
                 />
               </FormControl>
-              <FormDescription>Enter your password</FormDescription>
               {errors.password && (
                 <FormMessage>{errors.password.message}</FormMessage>
               )}
             </FormItem>
           )}
         />
+        <div className=" py-3 ">
+          <span className=" text-sm">
+            Don't have an account?{" "}
+            <Link className=" underline" href={"/register"}>
+              Register
+            </Link>
+          </span>
+        </div>
 
-        {/* Submit Button */}
-        <Button type="submit" className="bg-blue-500 text-white px-4 py-2">
+        <Button type="submit" className=" w-full mt-8 px-4 py-2">
           Login
         </Button>
       </form>

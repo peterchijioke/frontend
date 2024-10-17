@@ -18,6 +18,7 @@ import {
   RegisterSchema,
 } from "@/app/_validation/registerValidation";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function RegisterForm() {
   const form = useForm<RegisterSchema>({
@@ -39,29 +40,6 @@ export default function RegisterForm() {
     <Form {...form}>
       <form onSubmit={handleSubmit(onSubmit)} className="max-w-md mx-auto p-4">
         {/* Username Field */}
-        <FormField
-          control={control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel htmlFor="username">Username</FormLabel>
-              <FormControl>
-                <Input
-                  id="username"
-                  type="text"
-                  {...register("username")}
-                  placeholder="Enter your username"
-                />
-              </FormControl>
-              <FormDescription>Enter your username</FormDescription>
-              {errors.username && (
-                <FormMessage>{errors.username.message}</FormMessage>
-              )}
-            </FormItem>
-          )}
-        />
-
-        {/* Email Field */}
 
         <FormField
           control={form.control}
@@ -78,7 +56,9 @@ export default function RegisterForm() {
                 />
               </FormControl>
               {errors.email && (
-                <FormMessage>{errors.email.message}</FormMessage>
+                <FormMessage className=" text-red-500">
+                  {errors.email.message}
+                </FormMessage>
               )}
             </FormItem>
           )}
@@ -97,9 +77,10 @@ export default function RegisterForm() {
                   placeholder="Enter your password"
                 />
               </FormControl>
-              <FormDescription>Enter your password</FormDescription>
               {errors.password && (
-                <FormMessage>{errors.password.message}</FormMessage>
+                <FormMessage className="text-red-500">
+                  {errors.password.message}
+                </FormMessage>
               )}
             </FormItem>
           )}
@@ -121,17 +102,24 @@ export default function RegisterForm() {
                 />
               </FormControl>
               {errors.confirmPassword && (
-                <FormMessage>{errors.confirmPassword.message}</FormMessage>
+                <FormMessage className=" text-red-500">
+                  {errors.confirmPassword.message}
+                </FormMessage>
               )}
             </FormItem>
           )}
         />
+        <div className=" py-3 ">
+          <span className=" text-sm">
+            Already have an account?{" "}
+            <Link className=" underline" href={"/"}>
+              Login
+            </Link>
+          </span>
+        </div>
 
         {/* Submit Button */}
-        <Button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
+        <Button type="submit" className=" mt-14 w-full px-4 py-2">
           Register
         </Button>
       </form>

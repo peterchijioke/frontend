@@ -1,10 +1,13 @@
 import RegisterForm from "../_components/(register)/RegisterForm";
+import NavBar from "../_components/Navbar";
 
 export default function RegisterPage() {
   return (
-    <div className="container mx-auto">
-      <h1 className="text-3xl font-bold text-center my-6">Register</h1>
-      <RegisterForm />
+    <div>
+      <NavBar />
+      <main>
+        <RegisterForm />
+      </main>
     </div>
   );
 }
