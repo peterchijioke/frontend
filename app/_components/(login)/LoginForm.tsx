@@ -1,6 +1,7 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+
 import {
   Form,
   FormControl,
@@ -18,7 +19,7 @@ import { postApiService } from "@/app/service/api.service";
 import toast from "react-hot-toast";
 import useUserStore from "@/app/_store/user.stor";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { Loader } from "lucide-react";
 
 export default function LoginForm() {
   const { setUser, setToken } = useUserStore();
@@ -34,10 +35,7 @@ export default function LoginForm() {
     handleSubmit,
     formState: { errors },
   } = form;
-
   const route = useRouter();
-  const [showPassword, setShowPassword] = useState(false);
-
   const onSubmit = async (data: LoginSchema) => {
     try {
       const res = await handleLogin({
@@ -47,22 +45,22 @@ export default function LoginForm() {
       if (res?.status === "success") {
         setUser(res?.user);
         setToken(res?.token);
-        form.reset(); // Reset the form
-        toast.success("Login successful!", {
+        toast.success("Registration successful!", {
           position: "top-right",
         });
         route.push("/");
       }
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message, {
+    } catch (error: any) {
+      if (error?.response.data) {
+        toast.error(error?.response.data?.message, {
           position: "top-right",
         });
-      } else {
-        toast.error("An unexpected error occurred", {
-          position: "top-right",
-        });
+        return;
       }
+
+      toast.error(error.message, {
+        position: "top-right",
+      });
     }
     console.log("Form data is valid:", data);
   };
@@ -85,7 +83,7 @@ export default function LoginForm() {
                 />
               </FormControl>
               {errors.email && (
-                <FormMessage className="text-red-500">
+                <FormMessage className=" text-red-500">
                   {errors.email.message}
                 </FormMessage>
               )}
@@ -94,6 +92,7 @@ export default function LoginForm() {
         />
 
         {/* Password Field */}
+
         <FormField
           control={form.control}
           name="password"
@@ -103,16 +102,10 @@ export default function LoginForm() {
               <FormControl>
                 <Input
                   id="password"
-                  type={showPassword ? "text" : "password"}
+                  type="password"
                   {...register("password")}
                   placeholder="Enter your password"
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? "Hide" : "Show"}
-                </button>
               </FormControl>
               {errors.password && (
                 <FormMessage>{errors.password.message}</FormMessage>
@@ -120,21 +113,21 @@ export default function LoginForm() {
             </FormItem>
           )}
         />
-        <div className="py-3">
-          <span className="text-sm">
-            Don&apos;t have an account?{" "}
-            <Link className="underline" href={"/register"}>
+        <div className=" py-3 ">
+          <span className=" text-sm">
+            Don't have an account?{" "}
+            <Link className=" underline" href={"/register"}>
               Register
             </Link>
           </span>
         </div>
 
         <Button
-          type="submit"
-          className="w-full mt-8 px-4 py-2"
           disabled={isMutating}
+          type="submit"
+          className=" w-full mt-8 px-4 py-2"
         >
-          {isMutating ? "Logging in..." : "Login"}
+          {isMutating ? <Loader className=" animate-spin w-3 h-3" /> : "Login"}
         </Button>
       </form>
     </Form>

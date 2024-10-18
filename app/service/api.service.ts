@@ -14,7 +14,7 @@ export const postApiService = async (url:string,{arg}:{arg:any}) => {
   try {
     const response = await AxiosBase.post(url,{...arg});
     return response.data
-  } catch (error) {
+  } catch (error:any) {
    throw error
   }
 };
