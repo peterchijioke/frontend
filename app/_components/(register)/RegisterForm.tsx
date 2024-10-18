@@ -53,7 +53,8 @@ export default function RegisterForm() {
         route.push("/login");
       }
     } catch (error) {
-      toast.error("Error occur", {
+      // Renamed 'e' to 'error'
+      toast.error(error instanceof Error ? error.message : "Error occurred", {
         position: "top-right",
       });
     }

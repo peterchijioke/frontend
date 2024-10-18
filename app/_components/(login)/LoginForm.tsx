@@ -32,7 +32,6 @@ export default function LoginForm() {
   const {
     register,
     handleSubmit,
-    control,
     formState: { errors },
   } = form;
 
@@ -54,10 +53,16 @@ export default function LoginForm() {
         });
         route.push("/");
       }
-    } catch (error: any) {
-      toast.error(error.message, {
-        position: "top-right",
-      });
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message, {
+          position: "top-right",
+        });
+      } else {
+        toast.error("An unexpected error occurred", {
+          position: "top-right",
+        });
+      }
     }
     console.log("Form data is valid:", data);
   };
@@ -117,7 +122,7 @@ export default function LoginForm() {
         />
         <div className="py-3">
           <span className="text-sm">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link className="underline" href={"/register"}>
               Register
             </Link>
