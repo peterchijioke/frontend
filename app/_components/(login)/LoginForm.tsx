@@ -27,15 +27,19 @@ export default function LoginForm() {
     "/users/login",
     postApiService
   );
+
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
   });
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = form;
+
   const route = useRouter();
+
   const onSubmit = async (data: LoginSchema) => {
     try {
       const res = await handleLogin({
@@ -45,19 +49,18 @@ export default function LoginForm() {
       if (res?.status === "success") {
         setUser(res?.user);
         setToken(res?.token);
-        toast.success("Registration successful!", {
+        toast.success("Login successful!", {
           position: "top-right",
         });
         route.push("/");
       }
     } catch (error: any) {
-      if (error?.response.data) {
+      if (error?.response?.data) {
         toast.error(error?.response.data?.message, {
           position: "top-right",
         });
         return;
       }
-
       toast.error(error.message, {
         position: "top-right",
       });
@@ -83,7 +86,7 @@ export default function LoginForm() {
                 />
               </FormControl>
               {errors.email && (
-                <FormMessage className=" text-red-500">
+                <FormMessage className="text-red-500">
                   {errors.email.message}
                 </FormMessage>
               )}
@@ -92,7 +95,6 @@ export default function LoginForm() {
         />
 
         {/* Password Field */}
-
         <FormField
           control={form.control}
           name="password"
@@ -113,10 +115,11 @@ export default function LoginForm() {
             </FormItem>
           )}
         />
-        <div className=" py-3 ">
-          <span className=" text-sm">
-            Don't have an account?{" "}
-            <Link className=" underline" href={"/register"}>
+
+        <div className="py-3">
+          <span className="text-sm">
+            Don&apos;t have an account?{" "}
+            <Link className="underline" href={"/register"}>
               Register
             </Link>
           </span>
@@ -125,9 +128,9 @@ export default function LoginForm() {
         <Button
           disabled={isMutating}
           type="submit"
-          className=" w-full mt-8 px-4 py-2"
+          className="w-full mt-8 px-4 py-2"
         >
-          {isMutating ? <Loader className=" animate-spin w-3 h-3" /> : "Login"}
+          {isMutating ? <Loader className="animate-spin w-3 h-3" /> : "Login"}
         </Button>
       </form>
     </Form>
