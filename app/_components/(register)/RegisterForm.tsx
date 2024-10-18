@@ -35,7 +35,6 @@ export default function RegisterForm() {
   const {
     register,
     handleSubmit,
-    control,
     formState: { errors },
   } = form;
 
@@ -53,8 +52,8 @@ export default function RegisterForm() {
         });
         route.push("/login");
       }
-    } catch (error: any) {
-      toast.error(error.message, {
+    } catch (error) {
+      toast.error("Error occur", {
         position: "top-right",
       });
     }
@@ -67,7 +66,7 @@ export default function RegisterForm() {
         <FormField
           control={form.control}
           name="email"
-          render={({ field }) => (
+          render={() => (
             <FormItem>
               <FormLabel htmlFor="email">Email</FormLabel>
               <FormControl>
@@ -91,7 +90,7 @@ export default function RegisterForm() {
         <FormField
           control={form.control}
           name="username"
-          render={({ field }) => (
+          render={() => (
             <FormItem>
               <FormLabel htmlFor="username">Username</FormLabel>
               <FormControl>
@@ -115,7 +114,7 @@ export default function RegisterForm() {
         <FormField
           control={form.control}
           name="password"
-          render={({ field }) => (
+          render={() => (
             <FormItem>
               <FormLabel htmlFor="password">Password</FormLabel>
               <FormControl>
@@ -139,7 +138,7 @@ export default function RegisterForm() {
         <FormField
           control={form.control}
           name="confirmPassword"
-          render={({ field }) => (
+          render={() => (
             <FormItem>
               <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
               <FormControl>

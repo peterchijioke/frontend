@@ -1,7 +1,6 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import {
   Form,
   FormControl,
@@ -19,6 +18,7 @@ import { postApiService } from "@/app/service/api.service";
 import toast from "react-hot-toast";
 import useUserStore from "@/app/_store/user.stor";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function LoginForm() {
   const { setUser, setToken } = useUserStore();
@@ -37,6 +37,8 @@ export default function LoginForm() {
   } = form;
 
   const route = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
+
   const onSubmit = async (data: LoginSchema) => {
     try {
       const res = await handleLogin({
@@ -46,7 +48,8 @@ export default function LoginForm() {
       if (res?.status === "success") {
         setUser(res?.user);
         setToken(res?.token);
-        toast.success("Registration successful!", {
+        form.reset(); // Reset the form
+        toast.success("Login successful!", {
           position: "top-right",
         });
         route.push("/");
@@ -65,7 +68,7 @@ export default function LoginForm() {
         <FormField
           control={form.control}
           name="email"
-          render={({ field }) => (
+          render={() => (
             <FormItem>
               <FormLabel htmlFor="email">Email</FormLabel>
               <FormControl>
@@ -77,7 +80,7 @@ export default function LoginForm() {
                 />
               </FormControl>
               {errors.email && (
-                <FormMessage className=" text-red-500">
+                <FormMessage className="text-red-500">
                   {errors.email.message}
                 </FormMessage>
               )}
@@ -86,20 +89,25 @@ export default function LoginForm() {
         />
 
         {/* Password Field */}
-
         <FormField
           control={form.control}
           name="password"
-          render={({ field }) => (
+          render={() => (
             <FormItem>
               <FormLabel htmlFor="password">Password</FormLabel>
               <FormControl>
                 <Input
                   id="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   {...register("password")}
                   placeholder="Enter your password"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </button>
               </FormControl>
               {errors.password && (
                 <FormMessage>{errors.password.message}</FormMessage>
@@ -107,17 +115,21 @@ export default function LoginForm() {
             </FormItem>
           )}
         />
-        <div className=" py-3 ">
-          <span className=" text-sm">
+        <div className="py-3">
+          <span className="text-sm">
             Don't have an account?{" "}
-            <Link className=" underline" href={"/register"}>
+            <Link className="underline" href={"/register"}>
               Register
             </Link>
           </span>
         </div>
 
-        <Button type="submit" className=" w-full mt-8 px-4 py-2">
-          Login
+        <Button
+          type="submit"
+          className="w-full mt-8 px-4 py-2"
+          disabled={isMutating}
+        >
+          {isMutating ? "Logging in..." : "Login"}
         </Button>
       </form>
     </Form>

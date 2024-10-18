@@ -1,11 +1,14 @@
 import {create} from 'zustand';
 import { persist } from 'zustand/middleware';
-
+interface IUser {
+    id:string;email:string;
+    username:string
+  }
 interface UserState {
-  user: any;
+  user: IUser|null;
 token:string|null;
   setToken: (token: string|null) => void;
-  setUser: (user: any) => void;
+  setUser: (user: IUser) => void;
   clearUser: () => void;
 }
 
@@ -15,7 +18,7 @@ const useUserStore = create<UserState>()(
       user: null,
       token:null,
       setToken: (token: string|null) => set({ token }),
-      setUser: (user: any) => set({ user }),
+      setUser: (user: IUser|null) => set({ user }),
       clearUser: () => set({ user: null,token:null }),
     }),
     {
