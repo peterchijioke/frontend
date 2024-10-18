@@ -20,13 +20,14 @@ import Link from "next/link";
 import useSWRMutation from "swr/mutation";
 import { postApiService } from "@/app/service/api.service";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function RegisterForm() {
   const { trigger: registerUser, isMutating } = useSWRMutation(
     "/users/register",
     postApiService
   );
-
+  const route = useRouter();
   const form = useForm<RegisterSchema>({
     resolver: zodResolver(registerSchema),
   });
@@ -40,15 +41,18 @@ export default function RegisterForm() {
 
   const onSubmit = async (data: RegisterSchema) => {
     try {
-      await registerUser({
+      const res = await registerUser({
         email: data.email,
         password: data.password,
-        username: data.username, // Use username from the form data
-        isAdmin: false, // Set isAdmin to false for regular users
+        username: data.username,
+        isAdmin: false,
       });
-      toast.success("Registration successful!", {
-        position: "top-right",
-      });
+      if (res?.status === "success") {
+        toast.success("Registration successful!", {
+          position: "top-right",
+        });
+        route.push("/login");
+      }
     } catch (error: any) {
       toast.error(error.message, {
         position: "top-right",
@@ -95,7 +99,7 @@ export default function RegisterForm() {
                   id="username"
                   type="text"
                   {...register("username")}
-                  placeholder="Choose a username"
+                  placeholder="Enter a username"
                 />
               </FormControl>
               {errors.username && (

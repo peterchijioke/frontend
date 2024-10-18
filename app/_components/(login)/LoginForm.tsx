@@ -1,13 +1,10 @@
 "use client";
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-// Import custom UI components
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -17,8 +14,18 @@ import { Input } from "@/components/ui/input";
 import { LoginSchema, loginSchema } from "@/app/_validation/loginValidation";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import useSWRMutation from "swr/mutation";
+import { postApiService } from "@/app/service/api.service";
+import toast from "react-hot-toast";
+import useUserStore from "@/app/_store/user.stor";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
+  const { setUser, setToken } = useUserStore();
+  const { trigger: handleLogin, isMutating } = useSWRMutation(
+    "/users/login",
+    postApiService
+  );
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
   });
@@ -29,7 +36,26 @@ export default function LoginForm() {
     formState: { errors },
   } = form;
 
-  const onSubmit = (data: LoginSchema) => {
+  const route = useRouter();
+  const onSubmit = async (data: LoginSchema) => {
+    try {
+      const res = await handleLogin({
+        email: data.email.toLocaleLowerCase().trim(),
+        password: data.password,
+      });
+      if (res?.status === "success") {
+        setUser(res?.user);
+        setToken(res?.token);
+        toast.success("Registration successful!", {
+          position: "top-right",
+        });
+        route.push("/");
+      }
+    } catch (error: any) {
+      toast.error(error.message, {
+        position: "top-right",
+      });
+    }
     console.log("Form data is valid:", data);
   };
 
