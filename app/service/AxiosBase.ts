@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const AxiosBase = axios.create({
-  baseURL: 'http://192.168.146.22:9000/api/v1',
+  baseURL: 'https://backend-vb31.onrender.com/api/v1',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
